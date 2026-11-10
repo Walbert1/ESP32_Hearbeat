@@ -1,32 +1,33 @@
-# Arduino Heartbeat
+# ESP32 Heartbeat
 
-This project is a small ESP32-based radar display built around an HLK-LD2450 millimeter-wave presence sensor and a 4-inch TFT LCD. It collects movement data from the radar module, decodes the target frames, and renders a live radar-style visualization on the screen.
+This project is an ESP32-based radar display built around an HLK-LD2450 millimeter-wave presence sensor and a 4-inch TFT LCD. It reads motion data from the radar sensor, decodes the target frames, and shows a live heartbeat-style radar map on the display.
 
 ## What I use
 
 ### Hardware
 - ESP32 Dev Module
-  - Runs the firmware and handles UART + display communication.
+  - The main controller for the project.
+  - Handles UART communication with the radar sensor and SPI communication with the display.
 - HLK-LD2450 mmWave radar sensor
-  - Sends wireless-style target tracking data over UART.
-  - Used to detect moving people/objects and read their X/Y position and speed.
+  - Detects moving people or objects.
+  - Reports target position and speed over serial UART.
 - Hosyond 4.0" TFT display with ST7796S controller
-  - 480x320 SPI display used as the main visualization panel.
-  - Controlled by TFT_eSPI for drawing the radar grid and target dots.
+  - 480x320 SPI display used for the live radar visualization.
+  - Controlled with TFT_eSPI.
 
 ### Software
 - PlatformIO
-  - Project build system and firmware upload workflow.
+  - Build system and firmware upload workflow.
 - Arduino framework
-  - Runs on the ESP32.
+  - Used to program the ESP32.
 - TFT_eSPI
-  - High-performance display library configured for the ST7796S panel.
+  - Display library configured for the ST7796S panel.
 - Unity (PlatformIO test framework)
-  - Used for on-device validation and diagnostics for the display and radar.
+  - Used for hardware checks and diagnostics.
 
 ## Project purpose
 
-The system reads radar target data, then plots the targets on a fixed radar map with a circular grid. The display updates in real time so you can see movement, direction, and approximate target position on the screen.
+The ESP32 reads radar target data and renders those targets on a fixed radar-style map with circular grid rings. The display updates in real time so movement, direction, and target position are visible on screen.
 
 ## Hardware wiring used in this project
 
@@ -50,10 +51,10 @@ These settings are defined in the build flags in `platformio.ini`.
 
 ## Project layout
 
-- `src/main.cpp` — main firmware for the ESP32 radar display
-- `test/test_lcd/test_main.cpp` — LCD sanity checks and visual display tests
-- `test/test_radar/test_main.cpp` — radar validation and waveform/baud diagnostics
-- `platformio.ini` — PlatformIO board, framework, library, and TFT driver settings
+- `src/main.cpp` — main ESP32 firmware for the radar display
+- `test/test_lcd/test_main.cpp` — LCD verification and visual display checks
+- `test/test_radar/test_main.cpp` — radar diagnostics and validation
+- `platformio.ini` — PlatformIO configuration for the ESP32, framework, and display settings
 
 ## Build and run
 
@@ -64,7 +65,7 @@ pio run
 pio run -t upload
 ```
 
-If you want to run the tests locally through PlatformIO:
+To run the tests:
 
 ```bash
 pio test
@@ -72,8 +73,8 @@ pio test
 
 ## Notes
 
-- The display driver is configured for a specific ST7796S panel and uses TFT_eSPI custom setup flags.
-- The radar module is configured to multi-target mode so it can report multiple moving objects.
-- The firmware reads UART frames directly from the LD2450 and decodes the target positions before rendering them.
+- The display driver is configured specifically for the ST7796S TFT panel.
+- The radar module is configured for multi-target tracking.
+- The ESP32 firmware reads UART frames from the LD2450 and decodes target X/Y coordinates before drawing them.
 
-If you want, I can also add a more detailed hardware list, a wiring diagram, or a deeper component-by-component breakdown for the ESP32, radar sensor, and display.
+If you want, I can also add a more detailed hardware list, a wiring diagram, or a component-by-component breakdown for the ESP32, radar sensor, and display.
